@@ -40,7 +40,7 @@ This directory contains all components for generating the benchmark database and
     - `embedding.csv` - Embeddings for old_text in same order as text.csv
   - `revision_csv_files/` - Contains `revision_clean.csv` with columns: `rev_id`, `rev_page`, `rev_minor_edit`, `rev_actor`, `rev_timestamp`
 
-- **`index_files/`** - C++ implementation files and generated indexes using HNSWlib and FAISS libraries
+- **`index_files/`** - C++ implementation files to generate indexes using HNSWlib and FAISS libraries
 
 - **`offsets_files/`** - Code and offset files for fast line access in baseline implementation
 
