@@ -1,10 +1,6 @@
 # HyBench
 
-A benchmarking framework for evaluating hybrid relational-vector workloads that combines traditional SQL operations with vector similarity search.
-
-## Overview
-
-HyBench provides a comprehensive benchmarking suite that adapts the real-world MediaWiki schema to include vector columns and offers parameterized SQL templates that interleave similarity search with traditional SQL operations. The framework supports multiple similarity semantics (neighbors based on top-k, rank intervals, and sampled ranks) and enables generating hybrid workloads to evaluate database systems on both performance and retrieval quality.
+**HyBench** is a benchmark framework for evaluating **hybrid queries** in vector databases using a MediaWiki-based dataset. It integrates structured and vector data to assess performance on real-world hybrid workloads.
 
 ## Requirements
 
