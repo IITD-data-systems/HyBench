@@ -1,6 +1,6 @@
 # Step 1: Generate benchmark data using MiniLM 
 # You can use other embedding model by simply replacing the first argument to any one present in the models_supported.txt file in the database-generation directory
-python3 benchmark_generator.py microsoft/MiniLM-L12-H384-uncased
+python3 database_generator.py microsoft/MiniLM-L12-H384-uncased
 
 # Step 2: Compile C++ index generators
 # You need to put the real path of faiss in the first compile command depending on the running system
