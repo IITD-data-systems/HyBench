@@ -52,14 +52,14 @@ bash database_and_query_generator.sh
 ```
 
 This script will:
-- Generate all embedding files (for pages and text)
+- Generate all embedding files (for page and text)
 - Create queries in the query-generation directory
 - Build required index and offset files
 
 #### Customization:
 
-- **Embedding Models**: Check `models_supported.txt` for available models. Modify the first command in `database_and_query_generator.sh` to use a different model (instructions provided in comments)
-- **System Configuration**: Update FAISS library paths in compile commands according to your system setup
+- **Embedding Models**: Check `models_supported.txt` for available models. Modify the first command in `database_and_query_generator.sh` to use a different model (instructions provided in comments inside the sh file)
+- **System Configuration**: Update FAISS library paths in compile commands according to your system setup (further instructions in sh file)
 
 ### 2. baseline-implementation/
 
@@ -79,7 +79,7 @@ bash run.sh
 
 This will compile and run all queries for all combinations of indexes and metrics, outputting query execution times.
 
-**Note**: Update FAISS library paths in `run.sh` according to your system configuration.
+**Note**: Update FAISS library paths in `run.sh` according to your system configuration. (further instructions in sh file's comments)
 
 #### Additional Files:
 - `pipeline_stages.cpp` - Helper implementations for indexes and utility functions
