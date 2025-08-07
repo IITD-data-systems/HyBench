@@ -42,7 +42,7 @@ This directory contains all components for generating the benchmark database and
 
 - **`index_files/`** - C++ implementation files to generate indexes using HNSWlib and FAISS libraries
 
-- **`offsets_files/`** - Code and offset files for fast line access in baseline implementation
+- **`offsets_files/`** - Code to generate offset files for fast line access in baseline implementation
 
 #### Quick Start:
 
