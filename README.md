@@ -1,148 +1,153 @@
 # HyBench
 
-**HyBench** is a benchmark framework for evaluating **hybrid queries** in vector databases using a MediaWiki-based dataset. It integrates structured and vector data to assess performance on real-world hybrid workloads.
+A benchmarking framework for evaluating hybrid relational-vector workloads that combines traditional SQL operations with vector similarity search.
 
-## 📁 Dataset Layout
+## Overview
 
-All data is located in the `data_csv_files/` directory, organized into the following subdirectories:
+HyBench provides a comprehensive benchmarking suite that adapts the real-world MediaWiki schema to include vector columns and offers parameterized SQL templates that interleave similarity search with traditional SQL operations. The framework supports multiple similarity semantics (neighbors based on top-k, rank intervals, and sampled ranks) and enables generating hybrid workloads to evaluate database systems on both performance and retrieval quality.
 
-### `category_csv_files/`
-* **category_links_clean.csv**: Contains 2 columns from MediaWiki's `category_links` table:
-   * `cl_from`
-   * `cl_to`
+## Requirements
 
-### `page_csv_files/`
-* **page.csv**:
-   * Columns: `page_id`, `page_title`
-   * Ordered by `page_id`
-* **embedding.csv**:
-   * Embeddings corresponding to `page.csv` entries
-   * Same row order as `page.csv`
-* **page_extra.csv**:
-   * Columns: `page_len`, `page_touched`, `page_namespace`
+- **FAISS** (libfaiss.a) and OpenBLAS
+- **HNSWlib** for C++
+- **C++17** with OpenMP support
+- **Python 3.6+**
+- **HuggingFace transformers** (for benchmark_generator.py)
 
-### `revision_csv_files/`
-* **revision_clean.csv**:
-   * Columns: `rev_id`, `rev_page`, `rev_minor_edit`, `rev_actor`, `rev_timestamp`
-   * Ordered by `rev_id`
+## Project Structure
 
-### `text_csv_files/`
-* **text.csv**:
-   * Columns: `old_id`, `old_text`
-   * Ordered by `old_id`
-* **embedding.csv**:
-   * Embeddings corresponding to `text.csv`
-   * Same row order as `text.csv`
+The repository is organized into five main directories:
 
-## ⚙️ Benchmark Setup
-
-Assumes the MediaWiki dataset is already prepared (except embeddings).
-
-### Step 1: Generate Embeddings & Queries
-
-```bash
-python3 benchmark_generator.py microsoft/MiniLM-L12-H384-uncased
+```
+HyBench/
+├── baseline-implementation/
+├── database-generation/
+├── output-files/
+├── query-generation/
+└── query-templates/
 ```
 
-This generates:
-- Page and text embeddings
-- Query files for the baseline
+### 1. database-generation/
 
-### Step 2: Compile Required C++ Files
+This directory contains all components for generating the benchmark database and embeddings.
 
-All C++ files need FAISS and hnswlib installed.
+#### Subdirectories:
 
-Sample compile command:
+- **`data_csv_files/`** - Contains the core MediaWiki dataset files organized in subdirectories:
+  - `category_csv_files/` - Contains `category_links_clean.csv` with columns `cl_from` and `cl_to`
+  - `page_csv_files/` - Contains:
+    - `page.csv` - Columns: `page_id`, `page_title` (ordered by page_id)
+    - `embedding.csv` - Embeddings corresponding to page titles in same order as page.csv
+    - `page_extra.csv` - Columns: `page_len`, `page_touched`, `page_namespace` (ordered by page_id)
+  - `text_csv_files/` - Contains:
+    - `text.csv` - Columns: `old_id`, `old_text` (ordered by old_id)
+    - `embedding.csv` - Embeddings for old_text in same order as text.csv
+  - `revision_csv_files/` - Contains `revision_clean.csv` with columns: `rev_id`, `rev_page`, `rev_minor_edit`, `rev_actor`, `rev_timestamp`
+
+- **`index_files/`** - C++ implementation files and generated indexes using HNSWlib and FAISS libraries
+
+- **`offsets_files/`** - Code and offset files for fast line access in baseline implementation
+
+#### Quick Start:
+
 ```bash
-g++ runner.cpp -o runner -O3 -std=c++17 -fopenmp \
-  -I/path/to/faiss \
-  /path/to/faiss/build/faiss/libfaiss.a \
-  -lopenblas -lm -fopenmp
+cd database-generation
+bash database_and_query_generator.sh
 ```
 
-Compile the following files similarly:
+This script will:
+- Generate all embedding files (for pages and text)
+- Create queries in the query-generation directory
+- Build required index and offset files
 
-**index_files/:**
-- `index_generation.cpp`
-- `index_generation_new.cpp`
-- `index_generation1.cpp`
+#### Customization:
 
-**offsets_files/:**
-- `offset_calculation.cpp`
+- **Embedding Models**: Check `models_supported.txt` for available models. Modify the first command in `database_and_query_generator.sh` to use a different model (instructions provided in comments)
+- **System Configuration**: Update FAISS library paths in compile commands according to your system setup
 
-**queries_pipelines/:**
-- `binary_embeddings_creator.cpp`
+### 2. baseline-implementation/
 
-Compiled output files of index_generation.cpp ,index_generation_new.cpp, index_generation1.cpp , offset_calculation.cpp and binary_embeddings_creator.cpp are index_generation, build_hnsw, index_generation1, offsets_calculation, binary_embeddings_creator respectively.
+Contains the C++ baseline implementation for query execution.
 
-### Step 3: Generate Indexes
+#### Structure:
+- **`queries/`** - C++ implementation of all 39 benchmark queries
+  - `runner.cpp` - Main query execution runner
+  - `run.sh` - Compilation and execution script
 
-#### a. FAISS & HNSW Indexes (in index_files/)
-
-Run all combinations of page/text × l2/cosine:
-```bash
-for t in page text; do
-  for m in l2 cos; do
-    ./index_generation $t $m
-    ./build_hnsw $t $m
-  done
-done
-```
-
-#### b. Generate ID Indexes
-```bash
-./index_generation1 ../data_csv_files/text_csv_files/text.csv old_id_index.bin 0
-./index_generation1 ../data_csv_files/page_csv_files/page.csv page_id_index.bin 0
-./index_generation1 ../data_csv_files/revision_csv_files/revision_clean.csv rev_id_index.bin 0
-./index_generation1 ../data_csv_files/revision_csv_files/revision_clean.csv rev_page_index.bin 1
-```
-
-### Step 4: Generate Offset Files (in offsets_files/)
+#### Usage:
 
 ```bash
-./offsets_calcuation ../data_csv_files/page_csv_files/page_extra.csv page_extra_offsets.bin
-./offsets_calcuation ../data_csv_files/page_csv_files/page.csv page_offsets.bin
-./offsets_calcuation ../data_csv_files/revision_csv_files/revision_clean.csv revision_offsets.bin
-./offsets_calcuation ../data_csv_files/text_csv_files/text.csv text_offsets.bin
-./offsets_calcuation ../data_csv_files/text_csv_files/embedding.csv text_embedding_offsets.bin
-```
-
-### Step 5: Convert Embeddings to Binary (in queries_pipelines/)
-
-```bash
-./binary_embeddings_creator page
-./binary_embeddings_creator text
-```
-
-## ▶️ Run the Baseline
-
-Run all hybrid queries using both FAISS and HNSW:
-```bash
-cd queries_pipelines/final_Appr_queries
+cd baseline-implementation/queries
 bash run.sh
 ```
 
-## ✅ Accuracy Calculation
+This will compile and run all queries for all combinations of indexes and metrics, outputting query execution times.
 
-Run from `final_Output/`:
+**Note**: Update FAISS library paths in `run.sh` according to your system configuration.
+
+#### Additional Files:
+- `pipeline_stages.cpp` - Helper implementations for indexes and utility functions
+
+### 3. query-generation/
+
+Contains generated queries for each of the 39 benchmark queries in the format required by the baseline implementation. These are automatically generated by the database generation script.
+
+### 4. query-templates/
+
+Contains SQL templates for all 39 queries organized by similarity semantic categories:
+- Nearest neighbor queries
+- Interval-based queries  
+- Sampling-based queries
+
+### 5. output-files/
+
+Contains experimental results and analysis tools.
+
+#### Contents:
+- **Results directories**:
+  - `brute_queries_output/` - Brute force query results
+  - `baseline_queries_output/` - Baseline implementation results
+  - `pgvector_query_plans/` - PostgreSQL pgvector execution plans
+  - `postgres_queries_output/` - PostgreSQL pgvector query results
+
+- **Analysis tools**:
+  - `ground_truth_result_computer.py` - Python script for running queries using pgvector with psycopg2 to compute ground truth results
+  - `accuracy_baseline.sh` - Accuracy calculation script for baseline implementation
+  - `raw_results.xlsx` - Raw experimental results with color-coded performance comparisons
+
+**Note on Ground Truth**: Ground truth is calculated using PostgreSQL with pgvector. The current directories already contain ground truth results for the default experimental setup. However, if you use a different embedding model, you will need to recalculate the ground truth using `ground_truth_result_computer.py`, which requires PostgreSQL and pgvector to be installed and configured on your system. The existing results are provided for the experimented dataset and default embedding model.
+
+#### Accuracy Evaluation:
+
 ```bash
-bash acc_final.sh <source> <library> <metric>
+cd output-files
+bash accuracy_baseline.sh
 ```
 
-**Arguments:**
-- `<source>`: `our` or `postgres`
-- `<library>`: `hnswlib` or `hnsw` or `ivfflat`
-- `<metric>`: `l2` or `cos`
+This script calculates accuracy results for all combinations of metrics and indexes for the baseline implementation.
 
-**Example:**
-```bash
-bash acc_final.sh our hnswlib l2
-```
+#### Result Interpretation:
+The Excel sheet uses color coding:
+- 🔴 **Red**: pgvector outperforms baseline
+- 🔵 **Blue**: Similar performance
+- 🟢 **Green**: Baseline outperforms pgvector
 
-## 🧰 Requirements
+## Getting Started
 
-- FAISS (libfaiss.a) and OpenBLAS
-- HNSWlib for C++
-- C++17 with OpenMP
-- Python 3.6+
-- HuggingFace transformers (for benchmark_generator.py)
+1. **Prepare your MediaWiki dataset** in the required CSV format within `data_csv_files/`
+2. **Configure system paths** for FAISS library locations
+3. **Generate database and queries**:
+   ```bash
+   cd database-generation
+   bash database_and_query_generator.sh
+   ```
+4. **Run baseline benchmarks**:
+   ```bash
+   cd baseline-implementation/queries
+   bash run.sh
+   ```
+5. **Evaluate accuracy**:
+   ```bash
+   cd output-files
+   bash accuracy_baseline.sh
+   ```
