@@ -1,0 +1,5 @@
+SELECT old_id,old_text
+FROM text 
+WHERE text_embedding {op} '{q2}' > {d}
+ORDER BY text_embedding {op} '{q1}'
+LIMIT {k};

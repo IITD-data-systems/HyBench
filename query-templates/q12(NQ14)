@@ -1,0 +1,5 @@
+SELECT rev_actor, SUM(rev_minor_edit) AS total_minor_edits 
+FROM text JOIN revision ON old_id=rev_id 
+WHERE text_embedding {op} '{q}' < {d} 
+GROUP BY rev_actor 
+ORDER BY total_minor_edits DESC;

@@ -1,0 +1,11 @@
+SELECT *
+FROM (
+    SELECT page_id, page_title, ROW_NUMBER() OVER () AS rank
+    FROM (
+        SELECT page_id, page_title
+        FROM page
+        WHERE page_len < {len}
+        ORDER BY page_embedding {op} '{q}', page_id
+    ) AS top_k
+) AS ranked
+WHERE rank IN ({r_1}, {r_2}, .., {r_n});  

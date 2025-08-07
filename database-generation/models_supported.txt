@@ -1,0 +1,32 @@
+# MiniLM family (fast, small, widely used)
+microsoft/MiniLM-L12-H384-uncased
+microsoft/MiniLM-L6-H384-uncased
+microsoft/MiniLM-L12-v2
+microsoft/MiniLM-L6-v2
+nreimers/MiniLM-L6-H384-uncased
+sentence-transformers/all-MiniLM-L6-v2
+sentence-transformers/all-MiniLM-L12-v2
+sentence-transformers/paraphrase-MiniLM-L6-v2
+sentence-transformers/paraphrase-MiniLM-L3-v2
+sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2
+
+# Multilingual models
+sentence-transformers/distiluse-base-multilingual-cased-v1
+sentence-transformers/distiluse-base-multilingual-cased-v2
+microsoft/Multilingual-MiniLM-L12-H384
+
+# RoBERTa models
+roberta-base
+roberta-large
+sentence-transformers/stsb-roberta-base
+sentence-transformers/stsb-roberta-large
+sentence-transformers/nli-roberta-base
+sentence-transformers/nli-roberta-large
+sentence-transformers/roberta-base-nli-stsb-mean-tokens
+sentence-transformers/all-roberta-large-v1
+
+# MS MARCO / QA-specific MiniLM models
+sentence-transformers/msmarco-MiniLM-L6-cos-v5
+sentence-transformers/msmarco-MiniLM-L12-v3
+sentence-transformers/msmarco-distilbert-base-tas-b
+sentence-transformers/multi-qa-MiniLM-L6-cos-v1

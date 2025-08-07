@@ -1,0 +1,11 @@
+SELECT rev_id
+FROM (
+    SELECT rev_id, ROW_NUMBER() OVER () AS rank
+    FROM (
+        SELECT rev_id
+        FROM text JOIN revision ON old_id = rev_id
+        WHERE rev_timestamp >= '{DATE_LOW}' AND rev_timestamp <= '{DATE_HIGH}'
+        ORDER BY text_embedding {op} '{q}', old_id  
+  ) AS top_k
+) AS ranked
+WHERE rank IN ({r_1}, {r_2}, .., {r_n}); 

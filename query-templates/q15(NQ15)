@@ -1,0 +1,13 @@
+WITH category_centroids AS (
+    SELECT cl.cl_to, AVG(p.page_embedding) AS centroid
+    FROM page p JOIN categorylinks cl ON p.page_id = cl.cl_from
+    GROUP BY cl.cl_to
+)
+SELECT c.cl_to, p.page_id, p.page_title
+FROM category_centroids c JOIN LATERAL (
+    SELECT p.page_id, p.page_title
+    FROM page p JOIN categorylinks cl ON p.page_id = cl.cl_from
+    WHERE cl.cl_to = c.cl_to
+    ORDER BY p.page_embedding {op} c.centroid, p.page_id
+    LIMIT 1
+) p ON TRUE;

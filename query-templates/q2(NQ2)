@@ -1,0 +1,4 @@
+SELECT old_id,old_text 
+FROM text 
+WHERE text_embedding {op} '{q}' < {d}
+ORDER BY text_embedding {op} '{q}',old_id;

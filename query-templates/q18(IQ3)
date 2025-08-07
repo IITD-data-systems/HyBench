@@ -1,0 +1,5 @@
+SELECT page_id,page_title 
+FROM page
+WHERE page_len < {len} 
+ORDER BY page_embedding {op} '{q}',page_id 
+LIMIT {r-l+1} OFFSET {l-1};

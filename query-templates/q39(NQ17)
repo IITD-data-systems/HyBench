@@ -1,0 +1,7 @@
+SELECT old_id,old_text
+FROM text 
+ORDER BY GREATEST (
+    text_embedding {op} '{q1}',
+    text_embedding {op} '{q2}'
+),old_id 
+LIMIT {k};

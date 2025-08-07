@@ -1,0 +1,16 @@
+SELECT rev_actor, COUNT(*) AS cou
+FROM (
+    SELECT page_id
+    FROM (
+        SELECT page_id, ROW_NUMBER() OVER () AS rank
+        FROM (
+            SELECT page_id
+            FROM page
+            where page_len < {len}
+            ORDER BY page_embedding {op} '{q}', page_id
+        ) AS top_k
+    ) AS ranked
+    WHERE rank IN ({r_1}, {r_2}, .., {r_n})  
+) AS filtered_page JOIN revision ON page_id = rev_page
+GROUP BY rev_actor
+ORDER BY cou DESC;

@@ -1,0 +1,6 @@
+SELECT page_id, page_title,
+FROM page
+WHERE page_len < {len} AND ((page_embedding {op} '{q}' BETWEEN {d_1} AND {d_1*})
+OR (page_embedding {op} '{q}' BETWEEN {d_2} AND {d_2*})
+OR .. OR (page_embedding {op} '{q}' BETWEEN {d_n} AND {d_n*}))
+ORDER BY page_embedding {op} '{q}', page_id;  

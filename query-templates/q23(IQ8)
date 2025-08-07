@@ -1,0 +1,5 @@
+SELECT rev_actor,COUNT(*) AS cou
+FROM page JOIN revision ON page_id=rev_page
+WHERE page_len < {len} AND page_embedding {op} '{q}' BETWEEN {d} AND {d*}
+GROUP BY rev_actor 
+ORDER BY cou DESC;

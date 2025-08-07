@@ -1,0 +1,5 @@
+SELECT rev_id 
+FROM text JOIN revision ON old_id=rev_id
+WHERE rev_timestamp>='{DATE_LOW}' AND rev_timestamp<='{DATE_HIGH}'
+ORDER BY text_embedding {op} '{q}',old_id
+LIMIT {k};

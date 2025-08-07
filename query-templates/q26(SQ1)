@@ -1,0 +1,10 @@
+SELECT *
+FROM (
+    SELECT old_id, old_text, ROW_NUMBER() OVER () AS rank
+    FROM (
+        SELECT old_id, old_text
+        FROM text
+        ORDER BY text_embedding {op} '{q}'
+    ) AS ordered_limited
+) AS ranked
+WHERE rank IN ({r_1}, {r_2}, .., {r_n});

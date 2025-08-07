@@ -1,0 +1,11 @@
+SELECT rev_actor,COUNT(*) AS cou
+FROM (
+    SELECT page_id
+    FROM page
+    WHERE page_len < {len}
+    ORDER BY page_embedding {op} '{q}', page_id 
+    LIMIT {r-l+1} OFFSET {l-1}
+) AS new_page JOIN revision 
+ON page_id=rev_page
+GROUP BY rev_actor 
+ORDER BY cou DESC;

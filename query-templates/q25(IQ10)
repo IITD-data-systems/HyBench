@@ -1,0 +1,8 @@
+SELECT year, old_id, distance
+FROM (
+    SELECT old_id, EXTRACT (YEAR FROM rev_timestamp) AS year, text_embedding {op} '{q}' AS distance
+    FROM text JOIN revision ON old_id = rev_id 
+    WHERE EXTRACT (YEAR FROM rev_timestamp) BETWEEN {YEARL} AND {YEARH} AND text_embedding {op} '{q}' BETWEEN {d} AND {d*}
+) AS ranked_pages 
+ORDER BY year DESC, 
+distance ASC;

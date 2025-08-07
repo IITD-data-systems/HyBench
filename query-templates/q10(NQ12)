@@ -1,0 +1,4 @@
+SELECT EXTRACT (YEAR FROM rev_timestamp) AS year, COUNT(*)
+FROM revision JOIN page ON rev_page=page_id
+WHERE page_embedding {op} '{q}' < {d}
+GROUP BY year;

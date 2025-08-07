@@ -1,0 +1,7 @@
+SELECT rev_id
+FROM text JOIN revision ON old_id = rev_id
+WHERE rev_timestamp >= '{DATE_LOW}' AND rev_timestamp <= '{DATE_HIGH}'
+AND ((text_embedding {op} '{q}' BETWEEN {d_1} AND {d_1*})
+OR (text_embedding {op} '{q}' BETWEEN {d_2} AND {d_2*})
+OR .. OR (text_embedding {op} '{q}' BETWEEN {d_n} AND {d_n*}))
+ORDER BY text_embedding {op} '{q}', old_id;  

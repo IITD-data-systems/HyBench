@@ -1,0 +1,8 @@
+SELECT EXTRACT (YEAR FROM rev_timestamp) AS year, COUNT(*)
+FROM revision JOIN (
+    SELECT page_id
+    FROM page
+    ORDER BY page_embedding {op} '{q}', page_id
+    LIMIT {k}
+) AS filtered_pages ON revision.rev_page = filtered_pages.page_id
+GROUP BY year;

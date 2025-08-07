@@ -1,0 +1,9 @@
+SELECT old_id,old_text
+FROM text 
+WHERE old_id not in (
+    SELECT old_id
+    FROM text 
+    ORDER BY text_embedding {op} '{q2}' 
+    LIMIT {k}) 
+ORDER BY text_embedding {op} '{q1}'
+LIMIT {k};
