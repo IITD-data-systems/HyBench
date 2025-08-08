@@ -71,6 +71,7 @@ g++ scale_database.cpp -o scale_database -O3 -std=c++17
 ./scale_database <scale_factor>
 ```
 
+Where scale_factor is a number up to 200 for the initial data size of 10M. This uses a simple duplication method to create larger datasets.
 
 ### 2. baseline-implementation/
 
