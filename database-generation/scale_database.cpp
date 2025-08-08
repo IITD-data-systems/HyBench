@@ -118,7 +118,7 @@ signed main(int argc, char* argv[]) {
     load_index(old_id_index, old_id_index_filename);
 
     // // File names
-    string page_file_name = "data_csv_files/page_csv_files/page1.csv";
+    string page_file_name = "data_csv_files/page_csv_files/page.csv";
     string page_extra_file_name = "data_csv_files/page_csv_files/page_extra.csv";
     string revision_file_name = "data_csv_files/revision_csv_files/revision_clean.csv";
     string text_file_name = "data_csv_files/text_csv_files/text.csv";
@@ -179,21 +179,24 @@ signed main(int argc, char* argv[]) {
             string rev_actor = revCols[3];
             string rev_time  = revCols[4];
 
+            // Get text rows for this revision
+            string old_text="";
+            auto textRowsIt = old_id_index.find(orig_rev_id);
+            if (textRowsIt != old_id_index.end() && !textRowsIt->second.empty()) {
+                int textRowNum = textRowsIt->second.front(); // first (only) number
+                string textRow = getRowByIndex(textFile, textOffsetFile, textRowNum);
+                vector<string> textCols = extractColumns(textRow, {0, 1});
+                old_text = textCols[1];
+                
+            }
+
             // Replicate revisions for each new page_id
             for (int i = 0; i < scale_factor; i++) {
                 revFileNew << cur_old_id << "," << new_page_ids[i] << ","
                            << rev_minor << "," << rev_actor << "," << rev_time << "\n";
 
-                // Get text rows for this revision
-                auto textRowsIt = old_id_index.find(orig_rev_id);
-                if (textRowsIt != old_id_index.end()) {
-                    for (int textRowNum : textRowsIt->second) {
-                        string textRow = getRowByIndex(textFile, textOffsetFile, textRowNum);
-                        vector<string> textCols = extractColumns(textRow, {0, 1});
-                        string old_text = textCols[1];
-                        textFileNew << cur_old_id << "," << old_text << "\n";
-                    }
-                }
+                textFileNew << cur_old_id << "," << old_text << "\n";
+              
                 cur_old_id++;
             }
         }
