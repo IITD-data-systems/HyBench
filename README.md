@@ -56,6 +56,11 @@ This script will:
 - Create queries in the query-generation directory
 - Build required index and offset files
 
+#### Customization:
+
+- **Embedding Models**: Check `models_supported.txt` for available models. Modify the first command in `database_and_query_generator.sh` to use a different model (instructions provided in comments inside the sh file)
+- **System Configuration**: Update FAISS library paths in compile commands according to your system setup (further instructions in sh file)
+
 ## Dataset Scaling
 
 To scale the dataset to larger sizes (up to 200× the initial 10M data size):
@@ -66,10 +71,6 @@ g++ scale_database.cpp -o scale_database -O3 -std=c++17
 ./scale_database <scale_factor>
 ```
 
-#### Customization:
-
-- **Embedding Models**: Check `models_supported.txt` for available models. Modify the first command in `database_and_query_generator.sh` to use a different model (instructions provided in comments inside the sh file)
-- **System Configuration**: Update FAISS library paths in compile commands according to your system setup (further instructions in sh file)
 
 ### 2. baseline-implementation/
 
