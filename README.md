@@ -56,6 +56,16 @@ This script will:
 - Create queries in the query-generation directory
 - Build required index and offset files
 
+## Dataset Scaling
+
+To scale the dataset to larger sizes (up to 200× the initial 10M data size):
+
+```bash
+cd database-generation
+g++ scale_database.cpp -o scale_database -O3 -std=c++17
+./scale_database <scale_factor>
+
+
 #### Customization:
 
 - **Embedding Models**: Check `models_supported.txt` for available models. Modify the first command in `database_and_query_generator.sh` to use a different model (instructions provided in comments inside the sh file)
