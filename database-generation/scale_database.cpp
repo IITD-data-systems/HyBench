@@ -107,6 +107,7 @@ std::vector<std::string> extractColumns(const std::string& row, const std::vecto
 signed main(int argc, char* argv[]) {
     
     int scale_factor = stoll(argv[1]);
+    string scale_factor_string = argv[1];
 
     string rev_page_index_filename = "index_files/rev_page_index.bin";
     std::unordered_map<int, std::vector<int>> rev_page_index;
@@ -117,17 +118,17 @@ signed main(int argc, char* argv[]) {
     load_index(old_id_index, old_id_index_filename);
 
     // // File names
-    string page_file_name = "data_csv_files/page_csv_files/page.csv";
+    string page_file_name = "data_csv_files/page_csv_files/page1.csv";
     string page_extra_file_name = "data_csv_files/page_csv_files/page_extra.csv";
     string revision_file_name = "data_csv_files/revision_csv_files/revision_clean.csv";
     string text_file_name = "data_csv_files/text_csv_files/text.csv";
     string revision_offset_file_name = "offsets_files/revision_offsets.bin";
     string text_offset_file_name = "offsets_files/text_offsets.bin";
 
-    string page_file_name_new = "data_csv_files/page_csv_files/page_new.csv";
-    string page_extra_file_name_new = "data_csv_files/page_csv_files/page_extra_new.csv";
-    string revision_file_name_new = "data_csv_files/revision_csv_files/revision_clean_new.csv";
-    string text_file_name_new = "data_csv_files/text_csv_files/text_new.csv";
+    string page_file_name_new = "data_csv_files/page_csv_files/page_"+scale_factor_string+".csv";
+    string page_extra_file_name_new = "data_csv_files/page_csv_files/page_extra_"+scale_factor_string+".csv";
+    string revision_file_name_new = "data_csv_files/revision_csv_files/revision_clean_"+scale_factor_string+".csv";
+    string text_file_name_new = "data_csv_files/text_csv_files/text_"+scale_factor_string+".csv";
 
     // // Open input files
     ifstream pageFile(page_file_name);
