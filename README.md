@@ -64,7 +64,7 @@ To scale the dataset to larger sizes (up to 200× the initial 10M data size):
 cd database-generation
 g++ scale_database.cpp -o scale_database -O3 -std=c++17
 ./scale_database <scale_factor>
-
+```
 
 #### Customization:
 
