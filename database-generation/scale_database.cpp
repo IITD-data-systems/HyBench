@@ -124,31 +124,41 @@ signed main(int argc, char* argv[]) {
     string text_file_name = "data_csv_files/text_csv_files/text.csv";
     string revision_offset_file_name = "offsets_files/revision_offsets.bin";
     string text_offset_file_name = "offsets_files/text_offsets.bin";
+    string page_embeddings_file_name = "data_csv_files/page_csv_files/embedding.csv";
+    string text_embeddings_file_name = "data_csv_files/text_csv_files/embedding.csv";
+    string text_embeddings_offset_file_name = "offsets_files/text_embedding_offsets.bin";
 
     string page_file_name_new = "data_csv_files/page_csv_files/page_"+scale_factor_string+".csv";
     string page_extra_file_name_new = "data_csv_files/page_csv_files/page_extra_"+scale_factor_string+".csv";
     string revision_file_name_new = "data_csv_files/revision_csv_files/revision_clean_"+scale_factor_string+".csv";
     string text_file_name_new = "data_csv_files/text_csv_files/text_"+scale_factor_string+".csv";
+    string page_embeddings_file_name_new = "data_csv_files/page_csv_files/embedding_"+scale_factor_string+".csv";
+    string text_embeddings_file_name_new = "data_csv_files/text_csv_files/embedding_"+scale_factor_string+".csv";
+
 
     // // Open input files
     ifstream pageFile(page_file_name);
     ifstream pageExtraFile(page_extra_file_name);
     ifstream revFile(revision_file_name);
     ifstream textFile(text_file_name);
+    ifstream textEmbeddingsFile(text_embeddings_file_name);
+    ifstream pageEmbeddingsFile(page_embeddings_file_name);
     ifstream revOffsetFile(revision_offset_file_name, ios::binary);
     ifstream textOffsetFile(text_offset_file_name, ios::binary);
-
+    ifstream textEmbeddingsOffsetFile(text_embeddings_offset_file_name, ios::binary);
     // // Open output files
     ofstream pageFileNew(page_file_name_new);
     ofstream pageExtraFileNew(page_extra_file_name_new);
     ofstream revFileNew(revision_file_name_new);
     ofstream textFileNew(text_file_name_new);
+    ofstream textEmbeddingsFileNew(text_embeddings_file_name_new);
+    ofstream pageEmbeddingsFileNew(page_embeddings_file_name_new);
 
     long long cur_page_id = 1;
     long long cur_old_id = 1;
 
-    string pageLine, pageExtraLine;
-    while (getline(pageFile, pageLine) && getline(pageExtraFile, pageExtraLine)) {
+    string pageLine, pageExtraLine, pageEmbeddingLine;
+    while (getline(pageFile, pageLine) && getline(pageExtraFile, pageExtraLine) && getline(pageEmbeddingsFile,pageEmbeddingLine)) {
         if (pageLine.empty()) continue;
 
         vector<string> pageCols = extractColumns(pageLine, {0, 1});
@@ -162,6 +172,7 @@ signed main(int argc, char* argv[]) {
             // page.csv
             pageFileNew << cur_page_id << "," << page_title << "\n";
             pageExtraFileNew << pageExtraLine << "\n";
+            pageEmbeddingsFileNew << pageEmbeddingLine << "\n";
             new_page_ids.push_back(cur_page_id);
             cur_page_id++;
         }
@@ -181,14 +192,18 @@ signed main(int argc, char* argv[]) {
 
             // Get text rows for this revision
             string old_text="";
+            string textEmbeddingLine = "";
             auto textRowsIt = old_id_index.find(orig_rev_id);
             if (textRowsIt != old_id_index.end() && !textRowsIt->second.empty()) {
                 int textRowNum = textRowsIt->second.front(); // first (only) number
+                textEmbeddingLine = getRowByIndex(textEmbeddingsFile, textEmbeddingsOffsetFile, textRowNum);
                 string textRow = getRowByIndex(textFile, textOffsetFile, textRowNum);
                 vector<string> textCols = extractColumns(textRow, {0, 1});
                 old_text = textCols[1];
                 
             }
+            
+
 
             // Replicate revisions for each new page_id
             for (int i = 0; i < scale_factor; i++) {
@@ -196,7 +211,7 @@ signed main(int argc, char* argv[]) {
                            << rev_minor << "," << rev_actor << "," << rev_time << "\n";
 
                 textFileNew << cur_old_id << "," << old_text << "\n";
-              
+                textEmbeddingsFileNew << textEmbeddingLine <<"\n";
                 cur_old_id++;
             }
         }
