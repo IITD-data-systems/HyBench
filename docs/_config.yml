@@ -1,0 +1,35 @@
+title: RVBench
+description: Benchmarking Hybrid Relational-Vector Database Systems
+remote_theme: just-the-docs/just-the-docs
+
+# Replace these values if you publish from a fork.
+url: "https://IITD-data-systems.github.io"
+baseurl: "/RVBench"
+repository: IITD-data-systems/RVBench
+
+# Theme options
+color_scheme: dark
+search_enabled: true
+heading_anchors: true
+nav_sort: case_insensitive
+
+aux_links:
+  "RVBench on GitHub":
+    - "https://github.com/IITD-data-systems/RVBench"
+
+callouts:
+  highlight:
+    title: Benchmark highlight
+    color: purple
+  important:
+    title: Important
+    color: blue
+  warning:
+    title: Warning
+    color: yellow
+
+footer_content: "RVBench: Benchmarking Hybrid Relational-Vector Workloads."
+
+plugins:
+  - jekyll-remote-theme
+  - jekyll-seo-tag

@@ -1,0 +1,14 @@
+RVBench
+
+Copyright (c) 2026-2027
+Indian Institute of Technology Delhi
+
+Documentation, benchmark specification, and query templates:
+Licensed under CC BY 4.0.
+
+Source code:
+Licensed under Apache License 2.0.
+
+Dataset components are derived from Wikimedia/MediaWiki
+datasets and remain subject to their original licenses and
+attribution requirements.
