@@ -328,28 +328,6 @@ Check that CSV row order is preserved between each table and its embedding file.
 
 Recompute ground truth whenever the dataset, embedding model, metric, or query parameters change.
 
----
-
-## GitHub Pages Documentation
-
-A polished GitHub Pages site can be added in the `docs/` folder. This repository works well with the **Just the Docs** Jekyll theme because it gives RVBench a searchable documentation site with navigation, callouts, and clean project pages.
-
-Recommended structure:
-
-```text
-docs/
-├── _config.yml
-├── index.md
-├── getting-started.md
-├── workload.md
-├── citation.md
-└── assets/
-    └── images/
-        └── rvbench-architecture.svg
-```
-
-
----
 
 ## Citation
 
