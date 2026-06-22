@@ -16,7 +16,6 @@ If RVBench helps your research, please cite the paper and the software artifact.
   author    = {Singh, Ayush and Beedkar, Kaustubh and Karthik, Srinivas and Doraiswamy, Harish and Bedathur, Srikanta},
   booktitle = {Proceedings of the International Conference on Extending Database Technology (EDBT)},
   year      = {2027},
-  address   = {Lille, France},
-  note      = {Update DOI and proceedings metadata when available}
+  address   = {Lille, France}
 }
 ```
