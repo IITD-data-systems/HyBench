@@ -9,7 +9,7 @@ permalink: /
 # RVBench
 {: .fs-9 }
 
-Benchmarking hybrid relational-vector database systems.
+Benchmarking Hybrid Relational-Vector Database Systems.
 {: .fs-6 .fw-300 }
 
 [Get started](getting-started){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 }
@@ -18,7 +18,7 @@ Benchmarking hybrid relational-vector database systems.
 
 ---
 
-![RVBench architecture](assets/images/rvbench-architecture.svg)
+![RVBench architecture](assets/images/rvbench-architecture.png)
 
 ## What RVBench evaluates
 
